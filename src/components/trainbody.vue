@@ -73,7 +73,7 @@
                     :xl="4"
                     style="text-align: center"
                 >
-                    <el-card style="text-align: center; height: 290px"
+                    <el-card style="text-align: center; height: 300px"
                         ><h2 style="font-size: 20px">Sensor{{ num }}</h2>
                         <el-table
                             class="table2"
@@ -99,7 +99,7 @@
                     </el-card>
                 </el-col>
                 <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
-                    <el-card style="text-align: center; height: 290px"
+                    <el-card style="text-align: center; height: 300px"
                         ><h2 style="font-size: 20px">Sensor Information</h2>
                         <el-table
                             class="table2"
@@ -147,6 +147,7 @@ export default {
             cxChart: null,
             fftmyChart: null,
             myChart: null,
+            width:0,
             sensordata: [
                 { name: "Type" },
                 { name: "Place" },
@@ -186,6 +187,8 @@ export default {
     },
     mounted: function () {
         const that = this;
+        that.width=$("#cxfigure").width();
+        var scale;
         $.ajax({
             url:
                 "http://10.0.2.20:8000/api/v1/gettrainpageinfo/?piczoom=" +
@@ -196,7 +199,13 @@ export default {
                 that.sensordata = ret.sensorinfo;
                 that.str = ret.trainpicinfo.url;
                 that.dataa = ret.trainpicinfo.traindata;
-
+                scale=that.width/ret.trainpicinfo.width;
+                that.cxzoom=scale
+                 for(let i=0;i<that.dataa.length;i++)
+                {
+                    that.dataa[i].value[0]*=scale;
+                    that.dataa[i].value[1]*=scale;
+                }
                 that.cximagew = ret.trainpicinfo.width;
                 that.cximageh1 = ret.trainpicinfo.height;
             },

@@ -1,9 +1,9 @@
 <template>
     <div class="statu">
-        <el-row :gutter="20" >
-            <span style="margin-left:200px;font-size:20px;color:red">{{status}}</span>
-            <span style="margin-left:20px;color:white">{{speed}}km/h</span>
-            <span  style="margin-left:10px;color:white">{{tem}}℃</span>
+        <el-row :gutter="20" style=""  class="state">
+            <span style="font-size:20px;color:red;">{{status}}</span>
+            <span  style="margin-left:20px;color:white">{{speed}}km/h</span>
+            <span   style="margin-left:10px;color:white">{{tem}}℃</span>
               <span
                style="margin-left:20px;color:white"
                             class="disabled"
@@ -47,5 +47,9 @@ export default {
 }
 </script>
 <style scoped>
-
+.state{
+    float: right;
+    padding-right: 30px;
+    
+}
 </style>

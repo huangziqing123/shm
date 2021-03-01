@@ -3,6 +3,7 @@
          <el-header height="50px" style="background-color:#1e2f4f;">
         <navar></navar>
          </el-header>
+         <br>
         <div class="main">
             <el-row :gutter="0">
                 <el-col :xs="24" :sm="24" :md="24" :lg="1" :xl="1">
@@ -15,6 +16,7 @@
                                 class="ph1"
                                 :body-style="{ padding: '0px' }"
                                 shadow="never"
+                                
                                 
                             >
                                 <img
@@ -170,6 +172,8 @@ export default {
 }
 .box {
     border-radius: 30px;
+    display: flex;
+    justify-content: center;
 }
 .left {
     width: 580px;
@@ -201,5 +205,8 @@ export default {
     width: 500px;
 
     border-radius: 30px;
+}
+.el-card_body{
+    display: flex;
 }
 </style>

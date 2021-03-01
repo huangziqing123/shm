@@ -71,6 +71,7 @@ export default {
             cximagew: 2200,
             str: "",
             dataa: [],
+            width:0,
             data:[],
               defaultProps: {
                 children: "children",
@@ -87,6 +88,8 @@ export default {
     },
      mounted: function () {
         const that = this;
+        that.width=$("#cxfigure").width();
+        var scale;
         $.ajax({
             url:
                 "http://10.0.2.20:8000/api/v1/getfaultanalysispageinfo/?piczoom=" +
@@ -98,6 +101,13 @@ export default {
                 that.str = ret.picinfo.url;
                 that.dataa = ret.picinfo.data;
                 that.data=ret.faultdiary;
+                 scale=that.width/ret.trainpicinfo.width;
+                that.cxzoom=scale
+                 for(let i=0;i<that.dataa.length;i++)
+                {
+                    that.dataa[i].value[0]*=scale;
+                    that.dataa[i].value[1]*=scale;
+                }
                 that.cximagew = ret.picinfo.width;
                 that.cximageh1 = ret.picinfo.height;
             },

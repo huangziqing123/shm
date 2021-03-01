@@ -125,6 +125,7 @@ export default {
             myChart:null,
             framedata: [],
             framestr: "",
+            width:0,
              screenWidth: document.body.clientWidth,
             sensorinfo: [
                 { name: "Maximum acc.:" },
@@ -148,6 +149,8 @@ export default {
     },
     mounted: function () {
         var that = this;
+        that.width=$("#xfjfigure").width();
+        var scale;
         $.ajax({
             url: "http://10.0.2.20:8000/api/v1/getfaultalarmpageinfo/?piczoom="+ that.xfjzoom.toString(),
             type: "GET",
@@ -155,7 +158,13 @@ export default {
             success: function (ret) {
                 that.framestr = ret.suspensionpicinfo.url;
                 that.framedata = ret.suspensionpicinfo.suspensiondata;
-
+              scale=that.width/ret.suspensionpicinfo.width;
+                that.xfjzoom=scale
+                 for(let i=0;i<that.framedata.length;i++)
+                {
+                    that.framedata[i].value[0]*=scale;
+                    that.framedata[i].value[1]*=scale;
+                }
                 that.xfjimageh = ret.suspensionpicinfo.height;
                 that.xfjimagew = ret.suspensionpicinfo.width;
                 that.data = ret.faultdiary;

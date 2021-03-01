@@ -1,163 +1,129 @@
 <template>
     <div>
-        
-                                <el-row :gutter="20" style="margin-top: 0 px">
-                                    <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
-                                        <el-card
-                                            class="trainbody"
-                                            style="
-                                                backgroundcolor: #D9D8D4;
-                                                height: 100%;
-                                            "
-                                        >
-                                            <div class="row">
-                                                <div
-                                                    id="cxfigure"
-                                                    class="col-12"
-                                                    style="
-                                                        width: 100%;
-                                                        height: 100%;
-                                                    "
-
-                                                ></div>
-                                            </div>
-                                        </el-card>
-                                    </el-col>
-                                    <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
-                                        <el-card
-                                            class="sensor"
-                                            style="backgroundcolor: #e6e6e6"
-                                        >
-                                            <el-table
-                                                class="table1"
-                                                :data="tableData"
-                                                stripe
-                                                highlight-current-row
-                                                style="
-                                                    width: 100%;
-                                                    height: 100%;
-                                                    background-color: #e6e6e6;
-                                                "
-                                                height="310"
-                                            >
-                                                <el-table-column
-                                                    prop="name"
-                                                    label="List of Sensors"
-                                                    align="center"
-                                                    style="
-                                                        background-color: #e6e6e6;
-                                                    "
-                                                />
-                                            </el-table>
-                                        </el-card>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="20" style="margin-top: 30px">
-                                    <el-col
-                                        :xs="24" :sm="24" :md="24" :lg="8" :xl="8"
-                                        style="text-align: center"
-                                    >
-                                        <el-card>
-                                            <div
-                                                id="sensorfigure"
-                                                style="
-                                                    height: 250px;
-                                                    width: 100%;
-                                                "
-                                            ></div>
-                                        </el-card>
-                                    </el-col>
-                                    <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
-                                        <el-card>
-                                            <div
-                                                id="fftfigure"
-                                                style="
-                                                    height: 250px;
-                                                    width: 100%;
-                                                "
-                                            ></div>
-                                        </el-card>
-                                    </el-col>
-                                    <el-col
-                                        :xs="24" :sm="24" :md="24" :lg="4" :xl="4"
-                                        style="text-align: center"
-                                    >
-                                        <el-card
-                                            style="
-                                                text-align: center;
-                                                height: 300px;
-                                            "
-                                            ><h2 style="font-size: 20px">
-                                                Sensor{{ num }}
-                                            </h2>
-                                            <el-table
-                                                class="table2"
-                                                :data="sensorinfo"
-                                                style="
-                                                    width: 100%;
-                                                    height: 100%;
-                                                    background-color: #e6e6e6;
-                                                "
-                                                :show-header="false"
-                                            >
-                                                <el-table-column
-                                                    prop="name"
-                                                    align="center"
-                                                    style="
-                                                        background-color: #e6e6e6;
-                                                    "
-                                                />
-                                                <el-table-column
-                                                    prop="val"
-                                                    align="center"
-                                                    style="
-                                                        background-color: #e6e6e6;
-                                                    "
-                                                />
-                                            </el-table>
-                                        </el-card>
-                                    </el-col>
-                                    <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
-                                        <el-card
-                                            style="
-                                                text-align: center;
-                                               height: 300px;
-                                            "
-                                            ><h2 style="font-size: 20px">
-                                                Sensor Information
-                                            </h2>
-                                            <el-table
-                                                class="table2"
-                                                :data="sensordata"
-                                                style="
-                                                    width: 100%;
-                                                    height: 100%;
-                                                    background-color: #e6e6e6;
-                                                    
-                                                "
-                                                 height="300"
-                                                 :show-header=false
-
-                                            >
-                                                <el-table-column
-                                                    prop="name"
-                                                    align="center"
-                                                    style="
-                                                        background-color: #e6e6e6;
-                                                    "
-                                                />
-                                                <el-table-column
-                                                    prop="val"
-                                                    align="center"
-                                                    style="
-                                                        background-color: #e6e6e6;
-                                                    "
-                                                />
-                                            </el-table>
-                                        </el-card>
-                                    </el-col>
-                                </el-row>
-                         
+        <el-row :gutter="20" style="margin-top: 0 px">
+            <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
+                <el-card
+                    class="trainbody"
+                    style="backgroundcolor: #d9d8d4; height: 100%"
+                >
+                    <div class="row">
+                        <div
+                            id="cxfigure"
+                            class="col-12"
+                            style="width: 100%; height: 100%"
+                        ></div>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
+                <el-card class="sensor" style="backgroundcolor: #e6e6e6">
+                    <el-table
+                        class="table1"
+                        :data="tableData"
+                        stripe
+                        highlight-current-row
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            background-color: #e6e6e6;
+                        "
+                        height="310"
+                    >
+                        <el-table-column
+                            prop="name"
+                            label="List of Sensors"
+                            align="center"
+                            style="background-color: #e6e6e6"
+                        />
+                    </el-table>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20" style="margin-top: 30px">
+            <el-col
+                :xs="24"
+                :sm="24"
+                :md="24"
+                :lg="8"
+                :xl="8"
+                style="text-align: center"
+            >
+                <el-card>
+                    <div
+                        id="sensorfigure"
+                        style="height: 250px; width: 100%"
+                    ></div>
+                </el-card>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
+                <el-card>
+                    <div
+                        id="fftfigure"
+                        style="height: 250px; width: 100%"
+                    ></div>
+                </el-card>
+            </el-col>
+            <el-col
+                :xs="24"
+                :sm="24"
+                :md="24"
+                :lg="4"
+                :xl="4"
+                style="text-align: center"
+            >
+                <el-card style="text-align: center; height: 300px"
+                    ><h2 style="font-size: 20px">Sensor{{ num }}</h2>
+                    <el-table
+                        class="table2"
+                        :data="sensorinfo"
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            background-color: #e6e6e6;
+                        "
+                        :show-header="false"
+                    >
+                        <el-table-column
+                            prop="name"
+                            align="center"
+                            style="background-color: #e6e6e6"
+                        />
+                        <el-table-column
+                            prop="val"
+                            align="center"
+                            style="background-color: #e6e6e6"
+                        />
+                    </el-table>
+                </el-card>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
+                <el-card style="text-align: center; height: 300px"
+                    ><h2 style="font-size: 20px">Sensor Information</h2>
+                    <el-table
+                        class="table2"
+                        :data="sensordata"
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            background-color: #e6e6e6;
+                        "
+                        height="300"
+                        :show-header="false"
+                    >
+                        <el-table-column
+                            prop="name"
+                            align="center"
+                            style="background-color: #e6e6e6"
+                        />
+                        <el-table-column
+                            prop="val"
+                            align="center"
+                            style="background-color: #e6e6e6"
+                        />
+                    </el-table>
+                </el-card>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -175,8 +141,9 @@ export default {
             str: "",
             dataa: [],
             cxChart: null,
-             fftmyChart:null,
-            myChart:null,
+            fftmyChart: null,
+            myChart: null,
+            width: 0,
             sensordata: [
                 { name: "Type" },
                 { name: "Place" },
@@ -215,6 +182,8 @@ export default {
     },
     mounted: function () {
         const that = this;
+        that.width = $("#cxfigure").width();
+        var scale;
         $.ajax({
             url:
                 "http://10.0.2.20:8000/api/v1/getrailpageinfo/?piczoom=" +
@@ -225,7 +194,12 @@ export default {
                 that.sensordata = ret.sensorinfo;
                 that.str = ret.railinfo.url;
                 that.dataa = ret.railinfo.railinfo;
-
+                scale = that.width / ret.railinfo.width;
+                that.cxzoom = scale;
+                for (let i = 0; i < that.dataa.length; i++) {
+                    that.dataa[i].value[0] *= scale;
+                    that.dataa[i].value[1] *= scale;
+                }
                 that.cximagew = ret.railinfo.width;
                 that.cximageh1 = ret.railinfo.height;
             },
@@ -235,18 +209,17 @@ export default {
 
         this.initpic1();
         this.initpic2();
-           setTimeout(() => {
-               window.onresize = () => {
+        setTimeout(() => {
+            window.onresize = () => {
                 return (() => {
                     window.screenWidth = document.body.clientWidth;
                     that.screenWidth = window.screenWidth;
                     this.cxChart.resize();
-                     this.fftmyChart.resize();
+                    this.fftmyChart.resize();
                     this.myChart.resize();
-
                 })();
             };
-           }, 400);
+        }, 400);
     },
 
     methods: {
@@ -482,12 +455,12 @@ export default {
                 backgroundColor: "#0b376d",
                 animation: false,
             };
-             this.fftmyChart.setOption(fftoption);
-             this.fftmyChart.showLoading();
+            this.fftmyChart.setOption(fftoption);
+            this.fftmyChart.showLoading();
         },
         initpic2() {
             var echarts = require("echarts");
-             this.myChart = echarts.init(
+            this.myChart = echarts.init(
                 document.getElementById("sensorfigure"),
                 "dark"
             );
@@ -584,8 +557,8 @@ export default {
                 animation: false,
             };
             // 使用刚指定的配置项和数据显示图表。
-             this.myChart.setOption(option);
-             this.myChart.showLoading();
+            this.myChart.setOption(option);
+            this.myChart.showLoading();
         },
     },
 };
@@ -602,7 +575,7 @@ export default {
 
 .trainbody {
     border-radius: 20px;
-    background-color: #D9D8D4;
+    background-color: #d9d8d4;
 }
 
 .el-table td,

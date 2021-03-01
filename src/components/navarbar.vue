@@ -1,31 +1,31 @@
 <template>
-    <div class="nav" style="background-color:#1e2f4f">
+    <div class="" style="background-color:#1e2f4f">
         <el-row :gutter="0" style="height:50px">
-            <el-col :span="12">
-                <a href="/" style="font-size: 30px; color: white; margin-top: 30px"
+            <el-col :span="12" class="leftside">
+                <a href="/" style="font-size: 30px; color: white; display:flex; justify-content: flex-start;align-items: center;"
                    >Structural Health Monitoring System of Maglev
                 </a>
             </el-col>
 
-            <el-col :span="3">
+            <el-col :span="3" class="middle">
                 <img
                     src="../../static/images/logo1.png"
                     id="logo1"
-                    style="width: 80%; height: 80%;margin-top:5px"
+                    style="max-height:100%;padding:5px"
                 />&nbsp;&nbsp;
             </el-col>
             <!-- <el-col :span="1">
         &nbsp;
     </el-col> -->
-            <el-col :span="3">
+            <el-col :span="3" class="middle">
                 <img
                     src="../../static/images/logo2.png"
                     class="image"
-                    style="width: 100%; height: 120%;margin-top:5px"
+                    style="max-height:100%;padding:5px"
                 />
             </el-col>
-            <el-col :span="5">
-                <el-dropdown @command="handleCommand" style="margin-top:10px">
+            <el-col :span="5" class="end">
+                <el-dropdown @command="handleCommand" >
                     <span class="el-dropdown-link" >
                         Language
                         <i class="el-icon-arrow-down el-icon--right"></i>
@@ -36,8 +36,8 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </el-col>
-            <el-col :span="1">
-               <el-link type="danger" icon="el-icon-switch-button" style="float:right;margin-top:10px"></el-link>
+            <el-col :span="1" class="end">
+               <el-link type="danger" icon="el-icon-switch-button"  style=""></el-link>
             </el-col>
         </el-row>
     </div>
@@ -56,10 +56,29 @@ export default {
 </script>
 <style scoped>
 .el-dropdown-link {
-    margin-left: 100px;
+    
     color: #ffffff;
 }
 .el-header{
     padding: 0px;
+}
+
+.middle{
+     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.leftside{
+     height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.end{
+    height: 100%;
+     display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 </style>

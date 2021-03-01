@@ -4,8 +4,8 @@
             <el-header height="" style="background-color: #1e2f4f">
                 <navbar></navbar>
             </el-header>
-            <el-container>
-                <el-aside width="235px">
+            <el-container style="height:100%">
+                <el-aside width="235px" >
                     <el-menu
                         default-active="2"
                         class="el-menu-vertical-demo"
@@ -15,6 +15,7 @@
                         text-color="#fff"
                         active-text-color="#ffd04b"
                         :collapse="isCollapse"
+                        
                     >
                         <el-menu-item index="3">
                             <i
@@ -117,10 +118,11 @@ export default {
 </script>
 <style scoped>
 .el-menu-vertical-demo {
-    height: 800px;
+    height: 100%;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-    min-height: 400;
+    width: 235px;
+    
 }
 .sidebar {
     padding-top: 10px;

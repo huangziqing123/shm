@@ -179,6 +179,7 @@ export default {
             cxChart: null,
              fftmyChart:null,
             myChart:null,
+            width:0,
             sensordata: [
                 { name: "Type" },
                 { name: "Place" },
@@ -217,6 +218,8 @@ export default {
     },
     mounted: function () {
         const that = this;
+        that.width=$("#cxfigure").width();
+        var scale;
         $.ajax({
             url:
                 "http://10.0.2.20:8000/api/v1/getsuspensionpageinfo/?piczoom=" +
@@ -227,10 +230,19 @@ export default {
                 that.sensordata = ret.sensorinfo;
                 that.str = ret.suspensionpicinfo.url;
                 that.dataa = ret.suspensionpicinfo.suspensiondata;
-                console.log(that.cxzoom)
-
+                
+                scale=that.width/ret.suspensionpicinfo.width;
+                 console.log(scale)
+                  that.cxzoom=scale
                 that.cximagew = ret.suspensionpicinfo.width;
                 that.cximageh1 = ret.suspensionpicinfo.height;
+                for(let i=0;i<ret.suspensionpicinfo.suspensiondata.length;i++)
+                {
+                    ret.suspensionpicinfo.suspensiondata[i].value[0]*=scale;
+                    ret.suspensionpicinfo.suspensiondata[i].value[1]*=scale;
+                }
+                console.log(ret.suspensionpicinfo.suspensiondata)
+                 that.dataa=ret.suspensionpicinfo.suspensiondata
             },
         });
 

@@ -1,6 +1,6 @@
 # myproject
 
-> A Vue.js project
+查看悬浮架车厢信息项目
 
 ## Build Setup
 

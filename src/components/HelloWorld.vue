@@ -27,7 +27,7 @@
                             </el-card>
                         </el-col>
                     </el-row>
-                    <el-row :gutter="30">
+                    <el-row :gutter="30" align="middle" style="height:100%">
                         <div class="bottom">
                             <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
                                 <div class="block"></div>
@@ -48,7 +48,7 @@
                                             Real-time <br />Monitoring
                                         </p>
                                     </div>
-                                    <div class="box2">
+                                    <div class="box2" style="">
                                         <el-link
                                             class="list"
                                             @click="gotolink('trainbody')"
@@ -121,7 +121,9 @@
                                                 font-size: 30px;
                                             "
                                         >
+                                        <el-link @click="setting()" class="setting">
                                             Settings
+                                        </el-link>
                                         </p>
                                     </div>
                                 </el-card>
@@ -136,11 +138,14 @@
 </template>
 
 <script>
+import common from "./common.vue"
 import navar from "./navarbar";
 export default {
     name: "HelloWorld",
     data() {
-        return {};
+        return {
+            url:common.url,
+        };
     },
     components: {
         navar,
@@ -149,12 +154,19 @@ export default {
         gotolink(msg) {
             this.$router.push("/" + msg);
         },
+        setting(){
+            window.location.href=this.url+"admin"
+        }
     },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.setting{
+    font-size: 30px;
+     text-align: center;
+}
 .ph1 {
     
     width: 100%;

@@ -4,18 +4,17 @@
             <el-header height="" style="background-color: #1e2f4f">
                 <navbar></navbar>
             </el-header>
-            <el-container style="height:100%">
-                <el-aside width="235px" >
+            <el-container :style="{height:this.sideheight}">
+                <el-aside width="auto">
                     <el-menu
                         default-active="2"
                         class="el-menu-vertical-demo"
-                        @open="handleOpen"
-                        @close="handleClose"
+                        
                         background-color="#1e2f4f"
                         text-color="#fff"
                         active-text-color="#ffd04b"
                         :collapse="isCollapse"
-                        
+                       
                     >
                         <el-menu-item index="3">
                             <i
@@ -92,6 +91,7 @@ export default {
     data() {
         return {
             isCollapse: false,
+            sideheight:  document.body.clientHeight-50+"px"
         };
     },
     components:{
@@ -101,11 +101,11 @@ export default {
         click() {
             if (this.isCollapse == false) {
                 this.isCollapse = true;
-                //this.$emit('changewidth');
+                this.changewidth();
                 console.log("11111");
             } else {
                 this.isCollapse = false;
-                //this.$emit('changewidth1');
+               this.changewidth1();
                 console.log("222222");
             }
             console.log("xxx");
@@ -113,12 +113,20 @@ export default {
         gotolink(msg) {
             this.$router.push({name:msg} );
         },
+          changewidth() {
+            document.getElementById("aside").setAttribute("style", "width:125px");
+        },
+
+        changewidth1() {
+            document.getElementById("aside").setAttribute("style", "width:235px");
+        },
     },
 };
 </script>
 <style scoped>
 .el-menu-vertical-demo {
     height: 100%;
+    width: 64px;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 235px;
@@ -129,5 +137,9 @@ export default {
 }
 .el-menu {
     border-right: 0px;
+}
+.side{
+     width:235px;
+      
 }
 </style>

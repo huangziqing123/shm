@@ -2,6 +2,7 @@
     <div class="fault">
         
                         <el-row :gutter="20" >
+                            <status></status>
                             <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
                                 <el-row :gutter="20">
                                     <el-card
@@ -70,6 +71,8 @@
                                                     height: 100%;
                                                     background-color: #e6e6e6;
                                                 "
+                                                :row-style="{height: '5px'}"
+                            :cell-style="{padding: '2px'}"
                                                 :show-header="false"
                                             >
                                                 <el-table-column
@@ -93,15 +96,17 @@
                             </el-col>
                             <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
                                 <el-card style="height: 100%">
+                                    <div class="tree">
                                     <el-tree
                                         :data="data"
                                         :props="defaultProps"
-                                        :default-expand-all="true"
-                                        node-key="id"
-                                        :highlight-current="isShowGaoliang"
+                                        
+                                        node-key="eid"
+                                        :highlight-current=true
                                         @node-click="handleNodeClick"
                                         ref="deptTree"
                                     ></el-tree>
+                                    </div>
                                 </el-card>
                             </el-col>
                         </el-row>
@@ -112,18 +117,25 @@
 <script>
 import left from "./left-navar.vue";
 import navbar from "./navarbar.vue";
+import status from "./status.vue";
+import common from "./common.vue"
+import { sendWebsocket,getmessage, closeWebsocket } from '../assets/js/websocket'
 export default {
     data() {
         return {
-            xfjzoom: 0.48,
+            url:common.url,
+          s :{"M": "update", "id": 1 } ,
+            xfjzoom: 0.4,
             xfjimageh: 530,
             xfjimagew: 1006,
             num: "1",
             data: [],
+            dataa:[],
             xfjChart:null,
             fftmyChart:null,
             myChart:null,
             framedata: [],
+             sensordata:[],
             framestr: "",
             width:0,
              screenWidth: document.body.clientWidth,
@@ -136,7 +148,7 @@ export default {
             defaultProps: {
 
 
-                children: "children",
+                children: "content",
                 label: "label",
             },
             isShowGaoliang: false,
@@ -146,28 +158,36 @@ export default {
     components: {
         navbar,
         left,
+        status
     },
     mounted: function () {
         var that = this;
         that.width=$("#xfjfigure").width();
         var scale;
         $.ajax({
-            url: "http://10.0.2.20:8000/api/v1/getfaultalarmpageinfo/?piczoom="+ that.xfjzoom.toString(),
-            type: "GET",
+            url: this.url+"api/v1/sensor/list/?place=1",
+            type: "get",
             async: false,
+            xhrFields: {
+      withCredentials: true
+    },
             success: function (ret) {
-                that.framestr = ret.suspensionpicinfo.url;
-                that.framedata = ret.suspensionpicinfo.suspensiondata;
-              scale=that.width/ret.suspensionpicinfo.width;
+                that.framestr = "data:image/jpg;base64,"+ ret.image;
+              
+              scale=that.width/ret.size[0];
                 that.xfjzoom=scale
-                 for(let i=0;i<that.framedata.length;i++)
-                {
-                    that.framedata[i].value[0]*=scale;
-                    that.framedata[i].value[1]*=scale;
-                }
-                that.xfjimageh = ret.suspensionpicinfo.height;
-                that.xfjimagew = ret.suspensionpicinfo.width;
+                console.log(scale)
+                const result = ret.sensors.map(item => ({value:item.location, name: item.id}))
+                  that.framedata = result;
+            //    for(let i=0;i<ret.suspensionpicinfo.suspensiondata.length;i++)
+            //     {
+            //         ret.suspensionpicinfo.suspensiondata[i].value[0]*=scale;
+            //         ret.suspensionpicinfo.suspensiondata[i].value[1]*=scale;
+            //     }
+                that.xfjimageh = ret.size[1];
+                that.xfjimagew = ret.size[0];
                 that.data = ret.faultdiary;
+                // that.framedata = ret.suspensionpicinfo.suspensiondata;
                 
             },
         });
@@ -186,9 +206,95 @@ export default {
                 })();
             };
            }, 400);
+            $.ajax({
+            url:
+                this.url+"api/v1/event/list/",
+            type: "get",
+            async: false,
+            xhrFields: {
+      withCredentials: true
+    },
+            success: function (ret) {
+                 
+                console.log(ret)
+                   that.data = ret;
+                // that.dataa = ret.trainpicinfo.traindata;
+           
+            },
+        });
+           //websocet连接
+         
+        //    sendWebsocket(that.s,this.getresult)
+        //    var str = getmessage()
+        //    console.log(str) 
+          
     },
     methods: {
+        getresult(res){
+          
+           this.a(res)
+        },
+          a(data1) {
+            var that = this;
+            return new Promise(function () { 
+                 
+               
+               for(var i =0;i<data1.fft.data.length;i++) { 
+                     that.fftdata=[]
+                    
+                        that.fftdata.push({
+                        
+                             name: data1.fft.data[i],
+                            value: [data1.fft.data[i][0], data1.fft.data[i][1]],
+                        });
+               }
+                    that.fftmyChart.setOption({
+                        series: [
+                            {
+                                data: that.fftdata,
+                            },
+                        ],
+                    });
+                    that.fftmyChart.hideLoading();
+                 
+
+                   for (var i = 0; i < data1.peak.data.length; i++) {
+                   that.sensordata.push({
+                       name: data1.peak.data[i],
+                            value: [data1.peak.data[i][0], data1.peak.data[i][1]],
+                           
+                        });
+                   }
+                         that.myChart.setOption({
+                        series: [
+                            {
+                                data: that.sensordata,
+                            },
+                        ],
+                    });
+                     that.myChart.hideLoading();
+                
+            });
+        },
         handleNodeClick(v) {
+              var that =this
+           if(v.content.eid!=null){
+               console.log(v.content.eid)
+                $.ajax({
+            url:
+                this.url+"api/v1/event/data/?id=20210614025550002"+"",
+            type: "get",
+            async: false,
+            success: function (ret) {
+                 
+                console.log(ret)
+                  that.getresult(ret)
+
+                // that.dataa = ret.trainpicinfo.traindata;
+           
+            },
+        });
+           }
             if (v.eventid != null) {
                 let that = this;
                 that.$nextTick(function () {
@@ -364,7 +470,7 @@ export default {
                         name: "sensorindex",
 
                         symbolSize: 30 * parseFloat(that.xfjzoom),
-                        data: that.framedata,
+                        data: that.framedata
                     },
                     {
                         name: "bgp",
@@ -542,6 +648,13 @@ export default {
 </script>
 
 <style>
+.tree{
+    height:580px;
+
+     display: block;
+
+     overflow-y: scroll;
+}
 .s-bg2 {
     background-color: red;
 }

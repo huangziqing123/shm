@@ -23,6 +23,7 @@ Router.prototype.push = function push(location) {
 }
 
 export default new Router({
+ 
   routes: [
     {
       path: '/',

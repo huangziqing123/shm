@@ -41,7 +41,7 @@
                         ></span>
                     </li>
                     <li class="nav-item">
-                        <el-dropdown @command="handleCommand">
+                        <el-dropdown >
                             <span class="el-dropdown-link">
                                 Language
                                 <i

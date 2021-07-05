@@ -1,135 +1,230 @@
 <template>
     <div class="fault">
-        
-                        <el-row :gutter="20" >
-                            <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
-                                <el-row :gutter="20">
-                                    <el-card
-                                        class="xfjbody"
-                                        style="
-                                            background-color: #e6e6e6;
-                                            height: 100%;
-                                            width: 100%;
-                                        "
-                                    >
-                                        <div class="row">
-                                            <div
-                                                id="cxfigure"
-                                                class="col-12"
-                                                style="
-                                                    height: 340px;
-                                                    width: 100%;
-                                                "
-                                            ></div>
-                                        </div>
-                                    </el-card>
-                                </el-row>
-                                <el-row :gutter="10" style="margin-top: 20px">
-                                    <el-col
-                                        :xs="24" :sm="24" :md="24" :lg="12" :xl="12"
-                                        style="text-align: center"
-                                    >
-                                        <el-card>
-                                            
-                                        </el-card>
-                                    </el-col>
-                                    <el-col  :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-                                        <el-card>
-                                            
-                                        </el-card>
-                                    </el-col>
-                                   
-                                </el-row>
-                            </el-col>
-                            <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
-                                <el-card style="height: 100%">
-                                    <el-tree
-                                        :data="data"
-                                        :props="defaultProps"
-                                        :default-expand-all="true"
-                                        node-key="id"
-                                        :highlight-current="isShowGaoliang"
-                                        @node-click="handleNodeClick"
-                                        ref="deptTree"
-                                    ></el-tree>
-                                </el-card>
-                            </el-col>
-                        </el-row>
-                   
+        <el-row :gutter="20">
+            <status></status>
+            <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
+                <el-row :gutter="20">
+                    <el-card
+                        class="xfjbody"
+                        style="
+                            background-color: #e6e6e6;
+                            height: 100%;
+                            width: 100%;
+                        "
+                    >
+                        <div class="row">
+                            <div
+                                id="cxfigure"
+                                class="col-12"
+                                style="height: 340px; width: 100%"
+                            ></div>
+                        </div>
+                    </el-card>
+                </el-row>
+                <el-row :gutter="10" style="margin-top: 20px">
+                    <el-col
+                        :xs="24"
+                        :sm="24"
+                        :md="24"
+                        :lg="12"
+                        :xl="12"
+                        style=""
+                    >
+                        <el-card style="height: 250px">
+                            <div class="text" style="margin-left: 30px">
+                                <big><strong> No.: {{eventid}}</strong></big>
+                                <br />
+                                <br />
+                                Status:<a style="color: red"> {{status}}</a> <br />
+                                <br />Time:{{time}} Velocity:{{vel}}<br /> 
+                                Environment: {{env}} Source: {{source}}
+                               
+                                <br />
+                                 Place:{{place}}
+                                <br />Severity: {{severity}}
+                            </div>
+                        </el-card>
+                    </el-col>
+                    <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <el-card style="height: 250px">
+                            <div style="margin-left: 30px">
+                                <big> <strong>Analysis </strong></big
+                                ><br /><br />
+                                <p id='analysis_text'>
+                                <!-- Fault: e.g. Gauge – track irregularity<br />
+                                Evidence: 1) e.g. maximum acceleration over 10
+                                m/s2 <br />
+                                2) e.g. vibration from high frequency over 2
+                                minutes <br />
+                                3) …<br />
+                                Compare with similar cases :<br />
+                                20200910085 -->
+                                </p>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
+                <el-card style="height: 100%">
+                    <div class="tree">
+                    <el-tree
+                        :data="data"
+                        :props="defaultProps"
+                        
+                        node-key="eid"
+                        :highlight-current=true
+                        @node-click="handleNodeClick"
+                        ref="deptTree"
+                    ></el-tree>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
 <script>
 import left from "./left-navar.vue";
 import navbar from "./navarbar.vue";
+import status from "./status.vue";
+import common from "./common.vue"
 export default {
     data() {
-        return{
-
+        return {
+            analysis:"gdoaknfoewhioejdie  jaoisjidsbdkja",
+            url:common.url,
+            eventid:null,
+            status:null,
+            time:null,
+            vel:null,
+            env: null,
+            source:null,
+            severity:null,
+            place:null,
             cximageh1: 500,
             cxzoom: 0.48,
             cximagew: 2200,
             str: "",
             dataa: [],
-            width:0,
-            data:[],
-              defaultProps: {
-                children: "children",
+            width: 0,
+            data: [],
+            defaultProps: {
+                children: "content",
                 label: "label",
             },
-            cxChart:null,
+            cxChart: null,
             isShowGaoliang: false,
-            selectnode: { handler: null, bgcolor: "", color:"" },
-        }
+            selectnode: { handler: null, bgcolor: "", color: "" },
+            treeheigh: document.body.clientHeight-60+"px"
+        };
     },
     components: {
         navbar,
         left,
+        status,
     },
-     mounted: function () {
+    mounted: function () {
+        var elementResizeDetectorMaker = require("element-resize-detector");
         const that = this;
-        that.width=$("#cxfigure").width();
+        that.width = $("#cxfigure").width();
         var scale;
-        $.ajax({
+          $.ajax({
             url:
-                "http://10.0.2.20:8000/api/v1/getfaultanalysispageinfo/?piczoom=" +
-                this.cxzoom.toString(),
-            type: "GET",
+                this.url+"api/v1/sensor/list/?place=0",
+            type: "get",
             async: false,
+            xhrFields: {
+      withCredentials: true
+    },
             success: function (ret) {
-            
-                that.str = ret.picinfo.url;
-                that.dataa = ret.picinfo.data;
-                that.data=ret.faultdiary;
-                 scale=that.width/ret.trainpicinfo.width;
+                  that.str ="data:image/jpg;base64,"+ ret.image;    
+                // console.log(ret.image)
+                // that.dataa = ret.trainpicinfo.traindata;
+                scale=that.width/ret.size[0];
                 that.cxzoom=scale
-                 for(let i=0;i<that.dataa.length;i++)
-                {
-                    that.dataa[i].value[0]*=scale;
-                    that.dataa[i].value[1]*=scale;
-                }
-                that.cximagew = ret.picinfo.width;
-                that.cximageh1 = ret.picinfo.height;
+                const result = ret.sensors.map(item => ({value:item.location, name: item.id}))
+                 that.dataa = result;
+                //  for(let i=0;i<that.dataa.length;i++)
+                // {
+                //     that.dataa[i].value[0]*=scale;
+                //     that.dataa[i].value[1]*=scale;
+                // }
+                that.cximagew = ret.size[0];
+                that.cximageh1 = ret.size[1];
             },
         });
-
+        //请求错误日志
+         $.ajax({
+            url:
+                this.url+"api/v1/event/list/",
+            type: "get",
+            async: false,
+            xhrFields: {
+      withCredentials: true
+    },
+            success: function (ret) {
+                 
+                console.log(ret)
+                   that.data = ret;
+                // that.dataa = ret.trainpicinfo.traindata;
+           
+            },
+        });
         this.settrain();
-         setTimeout(() => {
-               window.onresize = () => {
+        setTimeout(() => {
+            window.onresize = () => {
                 return (() => {
                     window.screenWidth = document.body.clientWidth;
                     that.screenWidth = window.screenWidth;
                     this.cxChart.resize();
-                    
-
                 })();
             };
-           }, 400);
-    
+        }, 400);
+        var erd = elementResizeDetectorMaker();
+        erd.listenTo(
+            document.getElementsByClassName("xfjbody"),
+            function (element) {
+                var width = element.offsetWidth;
+                var height = element.offsetHeight;
+
+                console.log("Size: " + width + "x" + height);
+                //使echarts尺寸重置
+                that.cxChart.resize();
+            }
+        );
     },
 
-    methods:{
-         handleNodeClick(v) {
+    methods: {
+        handleNodeClick(v) {
+            var that =this
+           if(v.content.eid!=null){
+               console.log(v.content.eid)
+                $.ajax({
+            url:
+                this.url+"api/v1/event/info?id="+v.content.eid,
+            type: "get",
+            async: false,
+            xhrFields: {
+      withCredentials: true
+    },
+            success: function (ret) {
+                 
+                console.log(ret)
+                  that.eventid=ret.id
+                  that.status=ret.status
+                  that.place =ret.place
+                  that.severity=ret.severity
+                  that.source=ret.source
+                  that.time=ret.time
+                  that.vel=ret.velocity
+                  //that.analysis=  
+                  document.getElementById("analysis_text").innerHTML=ret.analysis.replaceAll('\r\n','<br />')
+                // that.dataa = ret.trainpicinfo.traindata;
+           
+            },
+        });
+           }
             if (v.eventid != null) {
                 let that = this;
                 that.$nextTick(function () {
@@ -144,12 +239,13 @@ export default {
                                 ".el-tree-node__content"
                             );
                             if (that.selectnode.handler != null) {
-                                that.selectnode.handler.className =that.selectnode.class;
-                                that.selectnode.handler.style.background="#00000000"
-                                    
+                                that.selectnode.handler.className =
+                                    that.selectnode.class;
+                                that.selectnode.handler.style.background =
+                                    "#00000000";
                             }
                             that.selectnode.class = content[0].className;
-                            content[0].style.background= "#A0CFFF";
+                            content[0].style.background = "#A0CFFF";
                             that.selectnode.handler = content[0];
                             // 加类，变更
                             //alert(v.eventid);
@@ -159,7 +255,7 @@ export default {
                 });
             }
         },
-         settrain() {
+        settrain() {
             var str = "";
             var that = this;
 
@@ -329,15 +425,29 @@ export default {
 
             this.cxChart.resize();
         },
-    }
-}
+    },
+};
 </script>
+
 <style scoped>
+.tree{
+    height:580px;
+
+     display: block;
+
+     overflow-y: scroll;
+}
+#analysis_text{
+    height: 250px;
+     display: block;
+
+     overflow-y: scroll;
+}
 .s-bg2 {
     background-color: red;
 }
 .s-c {
     font-weight: 700;
-    color: #53A8FF;
+    color: #53a8ff;
 }
 </style>

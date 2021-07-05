@@ -25,7 +25,7 @@
                 />
             </el-col>
             <el-col :span="5" class="end">
-                <el-dropdown @command="handleCommand" >
+                <el-dropdown  >
                     <span class="el-dropdown-link" >
                         Language
                         <i class="el-icon-arrow-down el-icon--right"></i>
@@ -37,20 +37,27 @@
                 </el-dropdown>
             </el-col>
             <el-col :span="1" class="end">
-               <el-link type="danger" icon="el-icon-switch-button"  style=""></el-link>
+               <el-link type="danger" icon="el-icon-switch-button"  style="" @click="logout()"></el-link>
             </el-col>
         </el-row>
     </div>
 </template>
 <script>
+import common from "./common.vue"
 export default {
     name: "navarbar",
-
+ data(){
+   return{
+       url:common.url,
+   }
+ },
     mounted: function () {
       
     },
     methods: {
-      
+      logout(){
+          window.location.href=this.url+"admin/logout"
+      }
     },
 };
 </script>

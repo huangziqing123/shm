@@ -17,10 +17,10 @@
                                             class="trainbody"
                                             style="
                                                 backgroundcolor: #e6e6e6;
-                                                height: 100%;
+                                                                     height: 100%;
                                             "
                                         >
-                                            <div class="row">
+                       <div class="row">
                                                 <div
                                                     id="cxfigure"
                                                     class="col-12"

@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-row :gutter="20" style="margin-top: 0 px">
+             <status></status>
             <el-col :xs="24" :sm="24" :md="24" :lg="20" :xl="20">
                 <el-card
                     class="trainbody"
@@ -22,6 +23,7 @@
                         :data="tableData"
                         stripe
                         highlight-current-row
+                        @current-change="handleCurrentChange"
                         style="
                             width: 100%;
                             height: 100%;
@@ -71,7 +73,7 @@
                 :xl="4"
                 style="text-align: center"
             >
-                <el-card style="text-align: center; height: 300px"
+                <el-card style="text-align: center; height: 250px"
                     ><h2 style="font-size: 20px">Sensor{{ num }}</h2>
                     <el-table
                         class="table2"
@@ -81,6 +83,8 @@
                             height: 100%;
                             background-color: #e6e6e6;
                         "
+                        :row-style="{height: '5px'}"
+                            :cell-style="{padding: '2px'}"
                         :show-header="false"
                     >
                         <el-table-column
@@ -97,11 +101,11 @@
                 </el-card>
             </el-col>
             <el-col :xs="24" :sm="24" :md="24" :lg="4" :xl="4">
-                <el-card style="text-align: center; height: 300px"
+                <el-card style="text-align: center; height: 250px"
                     ><h2 style="font-size: 20px">Sensor Information</h2>
                     <el-table
                         class="table2"
-                        :data="sensordata"
+                        :data="sensordata1"
                         style="
                             width: 100%;
                             height: 100%;
@@ -130,10 +134,14 @@
 <script>
 import left from "./left-navar.vue";
 import navbar from "./navarbar.vue";
+import status from "./status.vue";
+import common from "./common.vue"
+import { sendWebsocket,getmessage, closeWebsocket } from '../assets/js/websocket'
 export default {
     name: "trainbody",
     data() {
         return {
+             url:common.url,
             cximageh: "height:" + 405 + "px",
             cximageh1: 500,
             cxzoom: 1,
@@ -144,41 +152,28 @@ export default {
             fftmyChart: null,
             myChart: null,
             width: 0,
-            sensordata: [
+            sensordata:[],
+            sensordata1: [
                 { name: "Type" },
                 { name: "Place" },
                 { name: "Range" },
                 { name: "Channel" },
             ],
             sensorinfo: [
-                { name: "Maximum acc.:" },
-                { name: "Minimum acc.:" },
-                { name: "Main Frequency:" },
-                { name: "Spring Index:" },
+                { name: "Maximum acc.:",val:0 },
+                { name: "Minimum acc.:" ,val:0},
+                { name: "Main Frequency:",val:0 },
+                { name: "Spring Index:",val:0 },
             ],
             num: "1",
             screenWidth: document.body.clientWidth,
-            tableData: [
-                {
-                    name: "Description of sensor 1",
-                },
-                {
-                    name: "Description of sensor 2",
-                },
-                {
-                    name: "Description of sensor 3",
-                },
-                {
-                    name: "Description of sensor 4",
-                },
-                { name: "Description of sensor 5" },
-                { name: "Description of sensor 6" },
-            ],
+            tableData: [ ],
         };
     },
     components: {
         navbar,
         left,
+        status
     },
     mounted: function () {
         const that = this;
@@ -186,22 +181,26 @@ export default {
         var scale;
         $.ajax({
             url:
-                "http://10.0.2.20:8000/api/v1/getrailpageinfo/?piczoom=" +
-                this.cxzoom.toString(),
-            type: "GET",
+                this.url+"api/v1/sensor/list/?place=4" ,
+            type: "get",
             async: false,
+            xhrFields: {
+      withCredentials: true
+    },
             success: function (ret) {
-                that.sensordata = ret.sensorinfo;
-                that.str = ret.railinfo.url;
-                that.dataa = ret.railinfo.railinfo;
-                scale = that.width / ret.railinfo.width;
+                // that.sensordata = ret.sensorinfo;
+                that.str ="data:image/jpg;base64,"+ ret.image;
+                 const result = ret.sensors.map(item => ({value:item.location, name: item.id}))
+                that.dataa = result;
+                console.log(that.dataa)
+                scale = that.width / ret.size[0];
                 that.cxzoom = scale;
                 for (let i = 0; i < that.dataa.length; i++) {
                     that.dataa[i].value[0] *= scale;
                     that.dataa[i].value[1] *= scale;
                 }
-                that.cximagew = ret.railinfo.width;
-                that.cximageh1 = ret.railinfo.height;
+                that.cximagew = ret.size[0];
+                that.cximageh1 = ret.size[1];
             },
         });
 
@@ -220,9 +219,127 @@ export default {
                 })();
             };
         }, 400);
+        
+            this.cxChart.on("click", { seriesName: "sensorindex" }, function (params) {
+      //console.log(params.data['id']);
+      console.log(params.data["name"]);
+      var s = { M: "update", id: params.data["name"] };
+      sendWebsocket(s, that.getresult);
+      that.updata(params.data["name"]);
+    });
+    this.sensorlist(2)
+
     },
 
     methods: {
+        sensorlist(j) {
+      var that = this;
+      $.ajax({
+        url: this.url + "api/v1/sensor/place/",
+        type: "get",
+        async: false,
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (ret) {
+          for (var i = 0; i < ret[j].sensors.length; i++) {
+            that.tableData.push({
+              name: "Description of sensor " + ret[j].sensors[i].number,
+              id: ret[j].sensors[i].id,
+            });
+          }
+        },
+      });
+    },
+         handleCurrentChange(val) {
+      var that = this;
+      this.currentRow = val;
+      console.log(this.currentRow.id);
+    this.updata(this.currentRow.id);
+       var s = { M: "update", id: this.currentRow.id };
+       sendWebsocket(s, this.getresult);
+    },
+    updata(id) {
+        var that = this;
+      $.ajax({
+        url: this.url + "api/v1/sensor/info/?id=" + id,
+        type: "get",
+        async: false,
+        xhrFields: {
+          withCredentials: true,
+        },
+        success: function (ret) {
+          that.sensordata1 = [];
+          that.sensordata1.push(
+            { name: "Type", val: ret.sensor_type },
+            { name: "Place", val: ret.place },
+            { name: "Range", val: ret.range },
+            { name: "Channel", val: ret.channel }
+          );
+        },
+      });
+    },
+         a(data1) {
+            var that = this;
+            return new Promise(function () { 
+                 
+               
+                if (data1.M === "fft") { 
+                  
+                     that.fftdata=[]
+                    for (var i = 0; i < data1.x.length; i++) {
+                        that.fftdata.push({
+                            name: data1.x[i],
+                            value: [data1.x[i], data1.y[i]],
+                        });
+                    }
+                    that.fftmyChart.setOption({
+                        series: [
+                            {
+                                data: that.fftdata,
+                            },
+                        ],
+                    });
+                    that.fftmyChart.hideLoading();
+                } else if (data1.M === "raw"){
+
+                   if( that.sensordata.length + data1.x.length >= 500){
+                     that.sensordata.splice(0, that.sensordata.length + data1.x.length - 500)
+                     
+                }
+                   for (var i = 0; i < data1.x.length; i++) {
+                   that.sensordata.push({
+                            name: data1.x[i],
+                            value: [data1.x[i], data1.y[i]],
+                        });
+                   }
+                         that.myChart.setOption({
+                        series: [
+                            {
+                                data: that.sensordata,
+                            },
+                        ],
+                    });
+                     that.myChart.hideLoading();
+                }
+                else if(data1.M === "kv"){
+                
+                   if(data1.max_acc)
+                   that.sensorinfo[0].val=data1.max_acc
+                   if(data1.min_acc)
+                   that.sensorinfo[1].val=data1.min_acc
+                   if(data1.main_freq)
+                   that.sensorinfo[2].val=data1.main_freq
+                   if(data1.spring_idx)
+                   that.sensorinfo[3].val=data1.spring_idx
+
+                }
+            });
+        },
+         getresult(res){
+           
+           this.a(res)
+        },
         changewidth() {
             document
                 .getElementById("aside")
@@ -385,7 +502,7 @@ export default {
                     {
                         name: "sensorindex",
                         //type:'scatter',
-                        symbolSize: 30 * parseFloat(that.cxzoom),
+                        symbolSize: 50 * parseFloat(that.cxzoom),
                         data: that.dataa,
                     },
                     {
